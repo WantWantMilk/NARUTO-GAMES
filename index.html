@@ -1,0 +1,86 @@
+<html>
+<head>
+    <title>Naruto Game</title>
+    <style>
+        body {
+            background-color: #f4f4f4;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        #gameCanvas {
+            border: 2px solid black;
+            background-image: url('https://example.com/naruto-background.jpg'); /* Replace with an actual URL */
+            background-size: cover;
+            display: block;
+            margin: 20px auto;
+        }
+        .controls {
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to the Naruto Game!</h1>
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
+    <div class="controls">
+        <button onclick="moveLeft()">Left</button>
+        <button onclick="moveRight()">Right</button>
+        <button onclick="jump()">Jump</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let player = { x: 50, y: 300, width: 50, height: 50, color: 'orange' };
+
+        function drawPlayer() {
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function moveLeft() {
+            player.x -= 20;
+            updateGame();
+        }
+
+        function moveRight() {
+            player.x += 20;
+            updateGame();
+        }
+
+        function jump() {
+            let jumpHeight = 100;
+            let initialY = player.y;
+
+            let upInterval = setInterval(() => {
+                if (player.y > initialY - jumpHeight) {
+                    player.y -= 5;
+                    updateGame();
+                } else {
+                    clearInterval(upInterval);
+                    let downInterval = setInterval(() => {
+                        if (player.y < initialY) {
+                            player.y += 5;
+                            updateGame();
+                        } else {
+                            clearInterval(downInterval);
+                        }
+                    }, 20);
+                }
+            }, 20);
+        }
+
+        function updateGame() {
+            clearCanvas();
+            drawPlayer();
+        }
+
+        drawPlayer();
+    </script>
+</body>
+</html>
