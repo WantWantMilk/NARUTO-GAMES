@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>木叶疾风传 - 火影忍者跑酷游戏</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏃‍♂️</text></svg>">
+    <style>
+        /* 预加载背景图 */
+        body::before {
+            content: '';
+            background-image: url('https://naruto-official.com/special/wallpaper_gallery/wallpaper/en/105_260201_wp_en.jpg');
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            z-index: -2;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- 游戏标题和菜单 -->
+        <header class="game-header">
+            <h1 class="title">🏃‍♂️ 木叶疾风传</h1>
+            <p class="subtitle">火影忍者主题跑酷游戏</p>
+        </header>
+
+        <!-- 游戏主画布区域 -->
+        <div class="canvas-wrapper">
+            <canvas id="gameCanvas"></canvas>
+            <div id="gameMenu" class="menu-overlay active">
+                <div class="menu-content">
+                    <h2>木叶疾风传</h2>
+                    <p>收集忍术卷轴，成为火影！</p>
+                    <div class="menu-buttons">
+                        <button id="startButton" class="btn-primary">开始游戏</button>
+                        <button id="continueButton" class="btn-secondary">继续游戏</button>
+                        <button id="instructionsButton" class="btn-secondary">游戏说明</button>
+                    </div>
+                    <div class="stats">
+                        <p>最高分: <span id="highScoreDisplay">0</span></p>
+                        <p>已收集卷轴: <span id="totalScrolls">0</span></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="pauseMenu" class="menu-overlay">
+                <div class="menu-content">
+                    <h2>游戏暂停</h2>
+                    <div class="menu-buttons">
+                        <button id="resumeButton" class="btn-primary">继续游戏</button>
+                        <button id="restartButton" class="btn-secondary">重新开始</button>
+                        <button id="menuButton" class="btn-secondary">返回主菜单</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="gameOverMenu" class="menu-overlay">
+                <div class="menu-content">
+                    <h2>游戏结束</h2>
+                    <p>本次得分: <span id="finalScore">0</span></p>
+                    <p>最高分: <span id="finalHighScore">0</span></p>
+                    <div class="menu-buttons">
+                        <button id="playAgainButton" class="btn-primary">再玩一次</button>
+                        <button id="backToMenuButton" class="btn-secondary">返回菜单</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 游戏UI控制面板 -->
+        <div class="game-ui">
+            <div class="score-display">
+                <div class="score-item">
+                    <span class="score-label">分数:</span>
+                    <span id="score" class="score-value">0</span>
+                </div>
+                <div class="score-item">
+                    <span class="score-label">距离:</span>
+                    <span id="distance" class="score-value">0m</span>
+                </div>
+                <div class="score-item">
+                    <span class="score-label">速度:</span>
+                    <span id="speed" class="score-value">x1.0</span>
+                </div>
+            </div>
+            
+            <div class="controls-info">
+                <div class="control-item mobile-only">
+                    <span>📱 点击屏幕跳跃 (长按跳更高)</span>
+                </div>
+                <div class="control-item desktop-only">
+                    <span>💻 空格键或↑键跳跃 | P键暂停</span>
+                </div>
+            </div>
+            
+            <div class="game-controls">
+                <button id="pauseButton" class="control-btn">⏸️ 暂停</button>
+                <button id="soundToggle" class="control-btn">🔊 声音</button>
+            </div>
+        </div>
+
+        <!-- 角色选择 -->
+        <div class="character-select">
+            <h3>选择忍者</h3>
+            <div class="characters">
+                <div class="character-card active" data-character="naruto">
+                    <div class="character-avatar">鸣人</div>
+                    <p>漩涡鸣人</p>
+                    <span class="unlocked">已解锁</span>
+                </div>
+                <div class="character-card locked" data-character="sasuke">
+                    <div class="character-avatar">佐助</div>
+                    <p>宇智波佐助</p>
+                    <span class="require">需要100卷轴</span>
+                </div>
+                <div class="character-card locked" data-character="sakura">
+                    <div class="character-avatar">小樱</div>
+                    <p>春野樱</p>
+                    <span class="require">需要500卷轴</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 游戏说明模态框 -->
+    <div id="instructionsModal" class="modal">
+        <div class="modal-content">
+            <h2>游戏说明</h2>
+            <div class="instructions">
+                <h3>🎯 游戏目标</h3>
+                <p>控制忍者在木叶村的屋顶奔跑，尽可能跑得更远，收集忍术卷轴解锁新角色。</p>
+                
+                <h3>🎮 操作方法</h3>
+                <p><strong>移动设备:</strong> 点击屏幕跳跃，长按可以跳得更高</p>
+                <p><strong>电脑:</strong> 空格键或↑键跳跃，P键暂停游戏</p>
+                
+                <h3>📦 游戏元素</h3>
+                <ul>
+                    <li><span class="scroll-icon">📜</span> 忍术卷轴：+10分</li>
+                    <li><span class="pill-icon">💊</span> 兵粮丸：短暂加速</li>
+                    <li><span class="obstacle-icon">🪨</span> 障碍物：避开或跳过</li>
+                </ul>
+                
+                <h3>⚡ 游戏特性</h3>
+                <ul>
+                    <li>游戏速度会随着距离增加而提升</li>
+                    <li>收集卷轴可以解锁新的可玩角色</li>
+                    <li>最高分会自动保存在本地</li>
+                </ul>
+            </div>
+            <button id="closeInstructions" class="btn-primary">明白了，开始游戏！</button>
+        </div>
+    </div>
+
+    <!-- 加载提示 -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p>加载游戏中...</p>
+    </div>
+
+    <!-- JavaScript 文件 -->
+    <script src="js/utils.js"></script>
+    <script src="js/background.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/obstacle.js"></script>
+    <script src="js/item.js"></script>
+    <script src="js/game.js"></script>
+    
+    <script>
+        // 防止移动端下拉刷新
+        document.addEventListener('touchmove', function(e) {
+            if (e.scale !== 1) e.preventDefault();
+        }, { passive: false });
+        
+        // 页面加载完成
+        window.addEventListener('load', function() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
