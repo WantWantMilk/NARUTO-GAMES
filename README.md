@@ -6,7 +6,7 @@ Naruto themed games. Created mostly by AI like Copilot and DeepSeek.
 
 ## 🎮 在线游玩
 
-访问：[https://你的用户名.github.io/仓库名/](https://你的用户名.github.io/仓库名/)
+访问：[https://WantWantMilk.github.io/NARUTO-GAMES/](https://WantWantMilk.github.io/NARUTO-GAMES/)
 
 ## ✨ 游戏特色
 
@@ -58,7 +58,7 @@ naruto-runner-game/
 
 1. 克隆项目到本地：
 ```bash
-git clone https://github.com/你的用户名/仓库名.git
+git clone https://github.com//
 ```
 
 1. 进入项目目录：
