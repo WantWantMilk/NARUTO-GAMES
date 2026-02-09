@@ -93,7 +93,16 @@ class GameEngine {
             this.itemManager = new ItemManager(this.canvas);
             
             // 设置音频
-            this.setupAudio();
+            setupAudio() {
+    try {
+        // 原有的音频代码
+        this.audioManager.addSound('jump', 'assets/audio/jump.mp3');
+        // ...
+    } catch (e) {
+        console.warn('音频初始化失败，继续游戏:', e);
+        // 继续执行而不中断
+    }
+}
             
             // 设置输入控制
             this.setupInputControls();
