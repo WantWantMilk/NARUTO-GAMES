@@ -1,4 +1,6 @@
-// 背景管理器
+// 背景系统
+import { GameUtils } from './utils.js';
+
 class Background {
     constructor(canvas) {
         this.canvas = canvas;

@@ -1,4 +1,6 @@
-// 游戏物品系统
+// 道具系统脚本
+import { GameUtils } from './utils.js';
+
 class GameItem {
     constructor(canvas, type, x, y) {
         this.canvas = canvas;

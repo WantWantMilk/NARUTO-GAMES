@@ -1,4 +1,10 @@
 // 火影忍者跑酷游戏主引擎
+import { GameUtils, PerformanceMonitor, AudioManager } from './utils.js';
+import Background from './background.js';
+import Player from './player.js';
+import { ObstacleManager } from './obstacle.js';
+import { ItemManager } from './items.js';
+
 class GameEngine {
     constructor() {
         // 获取画布和上下文
@@ -93,16 +99,7 @@ class GameEngine {
             this.itemManager = new ItemManager(this.canvas);
             
             // 设置音频
-            setupAudio() {
-    try {
-        // 原有的音频代码
-        this.audioManager.addSound('jump', 'assets/audio/jump.mp3');
-        // ...
-    } catch (e) {
-        console.warn('音频初始化失败，继续游戏:', e);
-        // 继续执行而不中断
-    }
-}
+            this.setupAudio();
             
             // 设置输入控制
             this.setupInputControls();

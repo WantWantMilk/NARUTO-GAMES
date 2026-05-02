@@ -1,4 +1,6 @@
 // 角色类 - 忍者角色系统
+import { GameUtils } from './utils.js';
+
 class Player {
     constructor(canvas, character = 'naruto') {
         this.canvas = canvas;

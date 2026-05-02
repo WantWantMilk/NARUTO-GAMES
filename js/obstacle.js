@@ -1,4 +1,6 @@
 // 障碍物系统
+import { GameUtils } from './utils.js';
+
 class Obstacle {
     constructor(canvas, type, x) {
         this.canvas = canvas;
