@@ -164,21 +164,26 @@ class GameEngine {
     }
 
     setupAudio() {
-        // 添加游戏音效
-        // 注意：实际项目中需要替换为真实音效文件URL
-        this.audioManager.addSound('jump', 'assets/audio/jump.mp3');
-        this.audioManager.addSound('collect', 'assets/audio/collect.mp3');
-        this.audioManager.addSound('hit', 'assets/audio/hit.mp3');
-        this.audioManager.addSound('game_over', 'assets/audio/game_over.mp3');
-        this.audioManager.addSound('select', 'assets/audio/select.mp3');
-        this.audioManager.addSound('background', 'assets/audio/background.mp3');
-        
-        // 设置音量
-        this.audioManager.setVolume(this.soundEnabled ? 0.5 : 0);
-        
-        // 播放背景音乐
-        if (this.soundEnabled) {
-            this.audioManager.play('background', true);
+        try {
+            // 添加游戏音效
+            // 注意：实际项目中需要替换为真实音效文件URL
+            this.audioManager.addSound('jump', 'assets/audio/jump.mp3');
+            this.audioManager.addSound('collect', 'assets/audio/collect.mp3');
+            this.audioManager.addSound('hit', 'assets/audio/hit.mp3');
+            this.audioManager.addSound('game_over', 'assets/audio/game_over.mp3');
+            this.audioManager.addSound('select', 'assets/audio/select.mp3');
+            this.audioManager.addSound('background', 'assets/audio/background.mp3');
+            
+            // 设置音量
+            this.audioManager.setVolume(this.soundEnabled ? 0.5 : 0);
+            
+            // 播放背景音乐
+            if (this.soundEnabled) {
+                this.audioManager.play('background', true);
+            }
+        } catch (e) {
+            console.warn('音频系统初始化失败，游戏将静音运行:', e);
+            this.soundEnabled = false;
         }
     }
 
@@ -1122,24 +1127,20 @@ class GameEngine {
     updateCharacterSelection() {
         document.querySelectorAll('.character-card').forEach(card => {
             const character = card.dataset.character;
+            if (!character) return;
             
             // 更新解锁状态
-            if (this.gameProgress.unlockedCharacters.includes(character)) {
-                card.classList.remove('locked');
-                card.querySelector('.require').style.display = 'none';
-                card.querySelector('.unlocked').style.display = 'block';
-            } else {
-                card.classList.add('locked');
-                card.querySelector('.require').style.display = 'block';
-                card.querySelector('.unlocked').style.display = 'none';
-            }
+            const isUnlocked = this.gameProgress.unlockedCharacters.includes(character);
+            card.classList.toggle('locked', !isUnlocked);
+            
+            const requireEl = card.querySelector('.require');
+            const unlockedEl = card.querySelector('.unlocked');
+            
+            if (requireEl) requireEl.style.display = isUnlocked ? 'none' : 'block';
+            if (unlockedEl) unlockedEl.style.display = isUnlocked ? 'block' : 'none';
             
             // 更新选中状态
-            if (character === this.selectedCharacter) {
-                card.classList.add('active');
-            } else {
-                card.classList.remove('active');
-            }
+            card.classList.toggle('active', character === this.selectedCharacter);
         });
     }
 

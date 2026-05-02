@@ -108,8 +108,8 @@ class Player {
     checkUnlockStatus(character) {
         if (character === 'naruto') return true;
         
-        const saveData = GameUtils.loadFromStorage('game_progress', { scrolls: 0, unlocked: ['naruto'] });
-        return saveData.unlocked.includes(character);
+        const saveData = GameUtils.loadFromStorage('game_progress', { totalScrolls: 0, unlockedCharacters: ['naruto'] });
+        return (saveData.unlockedCharacters || saveData.unlocked || ['naruto']).includes(character);
     }
 
     init() {
@@ -234,7 +234,7 @@ class Player {
         // 创建奔跑轨迹
         this.trailTimer += deltaTime;
         if (this.trailTimer > 50 && this.isRunning && !this.isJumping) {
-            this.createTrailParticle();
+            this.createTrailParticle(gameSpeed);
             this.trailTimer = 0;
         }
     }
@@ -263,7 +263,7 @@ class Player {
         }
     }
 
-    createTrailParticle() {
+    createTrailParticle(gameSpeed = 5) {
         if (this.trailParticles.length < this.maxTrailParticles) {
             this.trailParticles.push({
                 x: this.x + Math.random() * this.width,
