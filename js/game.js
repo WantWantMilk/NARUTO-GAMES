@@ -477,20 +477,22 @@ class GameEngine {
         console.log(`游戏结束: ${reason}, 分数: ${this.score}`);
     }
 
-    resetGame() {
-        this.score = 0;
-        this.distance = 0;
-        this.gameSpeed = this.baseSpeed;
-        this.speedMultiplier = 1.0;
-        this.gameTime = 0;
-        this.combo = 0;
-        this.player.reset();
-        this.obstacleManager.reset();
-        this.itemManager.reset();
-        this.screenShake.timer = 0;
-        this.flashEffect.timer = 0;
-        if (this.soundEnabled) this.audioManager.play('background', true);
-    }
+resetGame() {
+    this.baseSpeed = 5; // 必须重置基础速度，否则会继承上次游戏的高速度
+    this.score = 0;
+    this.distance = 0;
+    this.gameSpeed = this.baseSpeed;
+    this.speedMultiplier = 1.0;
+    this.gameTime = 0;
+    this.combo = 0;
+    this.comboMultiplier = 1; // 顺便补上 comboMultiplier 的重置（更严谨）
+    this.player.reset();
+    this.obstacleManager.reset();
+    this.itemManager.reset();
+    this.screenShake.timer = 0;
+    this.flashEffect.timer = 0;
+    if (this.soundEnabled) this.audioManager.play('background', true);
+}
 
     toggleSound() {
         this.soundEnabled = !this.soundEnabled;
